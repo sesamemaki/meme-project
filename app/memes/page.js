@@ -3,7 +3,6 @@ import Script from "next/script";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Modal from "app/modal.js";
 import "flowbite";
 
@@ -11,11 +10,7 @@ const Memes = (defaultModal) => {
   const [memes, setMemes] = useState([]);
   const [memeIndex, setMemeIndex] = useState(0);
   const [captions, setCaptions] = useState([]);
-  const [isShown, setIsShown] = useState(false);
   const [generated, setGenerated] = useState();
-
-  const router = useRouter();
-  // const queryClient = useQueryClient();
 
   const updateCaption = (e, index) => {
     const text = e.target.value || "";
@@ -48,9 +43,6 @@ const Memes = (defaultModal) => {
         setGenerated(res.data.url);
       })
     );
-    setIsShown(true);
-
-    console.log(isShown);
   };
 
   const shuffleArray = (array) => {
@@ -77,12 +69,10 @@ const Memes = (defaultModal) => {
       setCaptions(Array(memes[memeIndex].box_count).fill(""));
     }
   }, [memeIndex, memes]);
-  console.log(isShown);
+
   return (
     <div className="h-screen w-full p-5 bg-gradient-to-r from-blue-200 to-transparent">
-      {isShown && generated && (
-        <Modal generated={generated} setGenerated={setGenerated} />
-      )}
+      {generated && <Modal generated={generated} />}
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.6/flowbite.min.js"></Script>
       <h1 className="text-center text-2xl font-semibold tracking-wide mb-2 ">
         Meme Generator

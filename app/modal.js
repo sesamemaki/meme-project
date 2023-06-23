@@ -1,21 +1,10 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
-import { useClipboard } from "use-clipboard-copy";
-
-export default function Modal({ generated, setGenerated }) {
+export default function Modal({ generated }) {
   const [open, setOpen] = useState(true);
-  const [copied, setCopied] = useState(false);
 
   const cancelButtonRef = useRef(null);
-
-  const clipboard = useClipboard();
-
-  const copyLink = () => {
-    clipboard.copy(generated);
-    setCopied(true);
-  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -50,36 +39,52 @@ export default function Modal({ generated, setGenerated }) {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
-                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                      <Dialog.Title
-                        as="h3"
-                        className="text-base font-semibold leading-6 text-gray-900"
-                      >
-                        Generated Meme
-                      </Dialog.Title>
-                      <div className="m-5">
-                        <img src={generated} alt="generated" />
-                      </div>
+                  <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-base font-semibold leading-6 text-gray-900"
+                    >
+                      Generated Meme
+                    </Dialog.Title>
+                    <div className="m-5">
+                      <img src={generated} alt="generated" />
+                    </div>
+                    <button
+                      type="button"
+                      className=" justify-center rounded-md px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                      onClick={() => setOpen(false)}
+                      ref={cancelButtonRef}
+                    >
+                      Make another
+                    </button>
+                  </div>
+
+                  <div className="flex flex-col space-y-4 px-10 py-4">
+                    <div className="flex justify-between">
+                      <label className="font-semibold" htmlFor="link">
+                        Image Link:
+                      </label>
+                      <input
+                        className="py-1 w-60 text-sm px-2 border border-slate-600 rounded-sm"
+                        readOnly
+                        type="text"
+                        id="link"
+                        value={generated}
+                      />
+                    </div>
+                    <div className="flex justify-between">
+                      <label className="font-semibold" htmlFor="link">
+                        Image HTML:
+                      </label>
+                      <input
+                        className="py-1  w-60 text-sm  px-2 border border-slate-600 rounded-sm"
+                        readOnly
+                        type="text"
+                        id="link"
+                        value={`<a href="${generated}"><img src="${generated}" title="made at imgflip.com"/></a><div><a href="https://imgflip.com/memegenerator">from Imgflip Meme Generator</a></div>`}
+                      />
                     </div>
                   </div>
-                </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={copyLink && (() => setOpen(false))}
-                  >
-                    Copy Meme Link
-                  </button>
-                  <button
-                    type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    onClick={() => setOpen(false)}
-                    ref={cancelButtonRef}
-                  >
-                    Make another
-                  </button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
